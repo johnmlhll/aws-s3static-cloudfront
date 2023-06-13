@@ -13,20 +13,29 @@ a {
 }
 li {
     list-style: none;
-}
+} 
 p {
     padding: 2%;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 1.5em;
+    font-size: 1.1em;
 }
 /*Standard sizes*/
-.subtitle {
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-    font-size:"1.7em";
-    font-weight: "bold";
-    line-height:"1.1em";
+.headline {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size:"1.6em";
+    font-weight: bolder;
+    font-style: italic;
+    text-align: center;
 }
-#title {
+.bullet li {
+    list-style:disc;
+    text-align: center;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.1em;
+    padding: 8px;
+
+}
+.title {
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     font-size:"2.5em";
     font-weight: "bold";
@@ -46,6 +55,17 @@ p {
     text-align: center;
     margin: 2% auto 2% auto;
     display: block;
+}
+.videorender {
+    object-fit: cover;
+    text-align: center;
+    display:flex;
+    object-fit: scale-down;
+    width:100%;
+    height:auto;
+    max-width:100%;
+    padding: 2%;
+    margin: auto auto auto 5%;
 }
 .logo {
     margin-left: 1%;
@@ -93,3 +113,40 @@ p {
 }
 
 /* Responsive Styling*/
+@media only screen and (max-width: 700px) {
+    .menu {
+        display:inline-flex;
+        font-size: 2em;
+        margin-left: 5%;
+    }
+    .menu li {
+        padding: 2px;
+        margin: 1%;
+        color:#fff;
+    }
+    .menu li a:hover {
+        color: green;
+    }
+    .menu li a:active {
+        color:darkgoldenrod;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .menu {
+        display:inline-flex;
+        font-size: 1.2em;
+        margin-left: 5%;
+    }
+    .menu li {
+        padding: 2px;
+        margin: 1%;
+        color:#fff;
+    }
+    .menu li a:hover {
+        color: green;
+    }
+    .menu li a:active {
+        color:darkgoldenrod;
+    }
+}
