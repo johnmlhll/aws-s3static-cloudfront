@@ -9,10 +9,10 @@ variables:
 parameters:
   - name: AWSRegion
     type: string
-    default: 'AWS::SSM::Parameter::target-region'
+    default: 'eu-east-1'
   - name: DesignatedStackName
     type: string
-    default: 'AWS::SSM::Parameter::stack-name'
+    default: 'DemoCloudFrontS3Stack'
 
 
 
