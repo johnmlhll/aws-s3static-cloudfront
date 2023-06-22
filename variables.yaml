@@ -1,0 +1,3 @@
+variables:
+- group: coudfrontS3DemoGroupSecure
+- group: cloudfrontS3DemoGroupNormal

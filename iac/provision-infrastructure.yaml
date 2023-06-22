@@ -1,0 +1,107 @@
+AWSTemplateFormation: '2010-09-09'
+Description: 'S3 & Cloudfront distribution provisioning deployment'
+
+Resources:
+  S3Bucket:
+    DeletionPolicy: 'Delete'
+    Metadata: 
+      Comment: 'Maolte Technical Solutions demo project to showcase a html/css static distribution to CloudFront'
+    Properties:
+      AccessControl: 'Private'
+      BucketName: !Sub 'static-cloudfront-distro-${AWS::StackName}-${AWS::AccountId}'
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault: 
+          SSEAlgorithm: 'AES256'
+      LifecycleConfiguration:
+        Rules:
+        - Id: GlacierMove
+          Prefix: glacier
+          Status: enabled
+          ExpirationInDays: 365
+          Transitions:
+          - TransitionInDays: 60
+            StorageClass: GLACIER
+        - Id: DeepGlacierMove
+          Prefix: deepglacier
+          Status: enabled
+          ExpirationInDays: 2777
+          Transitions:
+          - TransitionInDays: 120
+  S3BucketPolicy:
+    Metadata:
+      Comment: 'Bucket policy for CloudFront only (OAI) access'
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+        - Action:
+          - 's3:GetObject'
+          Effect: 'Allow'
+          Principal:
+            CanonicalUser: !GetAtt CFOriginAccessIdentity.S3CanonicalUserId
+          Resource:
+          - !Sub 'arn:aws:s3:::${S3Bucket}/*'
+    Type: 'AWS::S3::BucketPolicy'
+
+  CfDistribution:
+    Metadata:
+      Comment: 'Basic CloudFront distribution from an S3 file origin'    
+    DependsOn: S3Bucket  
+    Properties:
+      DistributionConfig:
+        Comment: 'CloudFront distribution for sample html/css website by Maolte Technical Solutions Limited'
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - 'HEAD'
+          - 'GET'
+          CachedMethods:
+          - 'HEAD'
+          - 'GET'
+          Compress: false
+          DefaultTTL: 86400
+          ForwardValues:
+            Cookies:
+              Forward: 'none'
+            Headers:
+            - 'Origin'
+            QueryString: false 
+          MaxTTL: 31536000
+          MinTTL: 84600
+          TargetOriginId: !Sub 's3-origin-${S3Bucket}'
+          ViewerProtocolPolicy: 'redirect-to-https'
+        DefaultRootObject: 'index.html'
+        Enabled: true
+        HttpVersion: 'http1.1'
+        IPV6Enabled: false 
+        Origins:
+        - DomainName: !GetAtt S3Bucket.DomainName
+          Id: !Sub 's3-origin-${S3Bucket}'
+          OriginPath: '/code'
+          S3OriginConfig:
+            OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOriginAccessIdentity}'
+        PriceClass: 'PriceClass_All'
+    Type: 'AWS::CloudFront::Distribution'
+
+  CFOriginAccessIdentity:
+    Metadata:
+      Comment: 'OAI Policy for CloudFront to only access S3 bucket: ${S3Bucket}'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'Using managed OAI policy for s3 bucket access from the CloudFront distro only. S3 bucket ref: ${S3Bucket}'
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+
+Outputs:
+  S3BucketName:
+    Description: 'S3 Bucket Name'
+    Value: !Ref S3Bucket
+  CfDistributionId:
+    Description: 'Id of the CloudFront distribution for the static site by Maolte Technical Solutions Limited'
+    value: !Ref CfDistribution
+  CfDistributionDomainName:
+    Description: 'Domain name attached to the CloudFront distribution'
+    Value: !GetAtt CfDistribution.Domainname
+      
+          
+
+
