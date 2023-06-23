@@ -5,18 +5,7 @@ pool:
 
 variables:
 - group: cloudfrontS3DemoGroupSecure
-- template: vars.yaml
-
-parameters:
-  - name: AWSRegion
-    type: string
-    default: $(awsRegion)
-  - name: DesignatedStackName
-    type: string
-    default: $(cftStackName)
-  - name: AWSAccessCreds
-    type: string
-    default: $(awsAccessKey)
+- group: cloudfrontS3DemoGroupNormal
 
 
 stages:
@@ -27,11 +16,13 @@ stages:
       steps:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
-          awsCredentials: ${{ parameters.AWSAccessCreds }}
-          regionName: ${{ parameters.AWSRegion }}
-          stackName: ${{ parameters.DesignatedStackName }}
+          awsCredentials: $env:AWS_ACCCESS_CREDS
+          regionName: $env:awsRegion
+          stackName: $env:cftStackName
           templateFile: 'iac/provision-infrastructure.yaml'
-          captureStackOutputs: asVariables     
+          captureStackOutputs: asVariables
+        env:
+          AWS_ACCCESS_CREDS: $(awsAccessKey)    
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
     displayName: "Deploy Static (S3) Site"
@@ -41,12 +32,14 @@ stages:
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
-          awsCredentials: ${{ parameters.AWSAccessCreds }}
-          regionName: ${{ parameters.AWSRegion }}
+          awsCredentials: $env:AWS_ACCCESS_CREDS
+          regionName: $env:awsRegion
           bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
+        env:
+          AWS_ACCCESS_CREDS: $(awsAccessKey)   
         
 
 
