@@ -10,10 +10,10 @@ variables:
 parameters:
   - name: RegionCode
     type: string 
-    default: '$(awsRegion)'
+    default: 'us-east-1'
   - name: CFTStackName
     type: string
-    default: $(cftStackName)
+    default: 'CloudFrontS3DemoStack'
 
 stages:
   - stage: ProvisionAWSInfrastructure
@@ -24,7 +24,7 @@ stages:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
-          regionName: 'eu-west-1'
+          regionName: ${{ parameters.RegionCode }}
           stackName: ${{ parameters.CFTStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
           captureStackOutputs: asVariables
@@ -39,7 +39,7 @@ stages:
         displayName: "Upload static site files to newly created S3"
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
-          regionName: 'eu-west-1'
+          regionName: ${{ parameters.RegionCode }}
           bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
