@@ -5,20 +5,19 @@ pool:
 
 variables:
 - group: cloudfrontS3DemoGroupSecure
+- template: vars.yaml
 
 parameters:
   - name: AWSRegion
     type: string
-    default: 'eu-east-1'
+    default: $(awsRegion)
   - name: DesignatedStackName
     type: string
-    default: 'DemoCloudFrontS3Stack'
-
-
+    default: $(cftStackName)
 
 stages:
   - stage: ProvisionAWSInfrastructure
-    displayName: "Deploy CloudFormation IAC Stack for S3/CloudFront to Maolte Sandbox"
+    displayName: "Deploy CFT Stack for S3/CloudFront to Maolte Sandbox"
     jobs:
     - job:
       steps:
@@ -28,20 +27,19 @@ stages:
           regionName: ${{ parameters.AWSRegion }}
           stackName: ${{ parameters.DesignatedStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
-          captureStackOutputs: asVariables
-
-        
+          captureStackOutputs: asVariables     
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
+    displayName: "Deploy Static (S3) Site"
     jobs:
     - job:
       steps:
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
-          awsCredentials: '$(awsAccessKey)'
-          regionName: '${{ parameters.AWSRegion }}'
-          bucketName: '$(S3BucketName)'
+          awsCredentials: $(awsAccessKey)
+          regionName: ${{ parameters.AWSRegion }}
+          bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
