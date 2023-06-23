@@ -28,6 +28,7 @@ Resources:
           ExpirationInDays: 2777
           Transitions:
           - TransitionInDays: 120
+    Type: 'AWS::S3::Bucket'      
   S3BucketPolicy:
     Metadata:
       Comment: 'Bucket policy for CloudFront only (OAI) access'
