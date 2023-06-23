@@ -12,23 +12,24 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault: 
-            SSEAlgorithm: 'AES256'
+            SSEAlgorithm: AES256
       LifecycleConfiguration:
         Rules:
-        - Id: GlacierMove
+        - Id: GlacierRule
           Prefix: glacier
           Status: enabled
           ExpirationInDays: 365
           Transitions:
-          - TransitionInDays: 60
+          - TransitionInDays: 10
             StorageClass: GLACIER
-        - Id: DeepGlacierMove
+        - Id: DeepGlacierRule
           Prefix: deepglacier
           Status: enabled
           ExpirationInDays: 2777
           Transitions:
-          - TransitionInDays: 120
-    Type: 'AWS::S3::Bucket'      
+          - TransitionInDays: 60
+    Type: 'AWS::S3::Bucket'
+
   S3BucketPolicy:
     Metadata:
       Comment: 'Bucket policy for CloudFront only (OAI) access'
@@ -36,13 +37,13 @@ Resources:
       Bucket: !Ref S3Bucket
       PolicyDocument:
         Statement:
-        - Action:
-          - 's3:GetObject'
-          Effect: 'Allow'
-          Principal:
-            CanonicalUser: !GetAtt CFOriginAccessIdentity.S3CanonicalUserId
-          Resource:
-          - !Sub 'arn:aws:s3:::${S3Bucket}/*'
+          - Action:
+            - 's3:GetObject'
+            Effect: 'Allow'
+            Principal:
+              CanonicalUser: !GetAtt CFOriginAccessIdentity.S3CanonicalUserId
+            Resource:
+              - !Sub 'arn:aws:s3:::${S3Bucket}/*'
     Type: 'AWS::S3::BucketPolicy'
 
   CfDistribution:
@@ -54,18 +55,18 @@ Resources:
         Comment: 'CloudFront distribution for sample html/css website by Maolte Technical Solutions Limited'
         DefaultCacheBehavior:
           AllowedMethods:
-          - 'HEAD'
-          - 'GET'
+              - 'HEAD'
+              - 'GET'
           CachedMethods:
-          - 'HEAD'
-          - 'GET'
+              - 'HEAD'
+              - 'GET'
           Compress: false
           DefaultTTL: 86400
-          ForwardValues:
+          ForwardedValues:
             Cookies:
               Forward: 'none'
             Headers:
-            - 'Origin'
+              - 'Origin'
             QueryString: false 
           MaxTTL: 31536000
           MinTTL: 84600
@@ -78,7 +79,7 @@ Resources:
         Origins:
           - DomainName: !GetAtt S3Bucket.DomainName
             Id: !Sub 's3-origin-${S3Bucket}'
-            OriginPath: '/code'
+            OriginPath: 'code/'
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOriginAccessIdentity}'
         PriceClass: 'PriceClass_All'
@@ -97,8 +98,8 @@ Outputs:
     Description: 'S3 Bucket Name'
     Value: !Ref S3Bucket
   CfDistributionId:
-    Description: 'Id of the CloudFront distribution for the static site by Maolte Technical Solutions Limited'
-    value: !Ref CfDistribution
+    Description: 'Id of the CloudFront distribution for the static site by Maolte Technical Solutions'
+    Value: !Ref CfDistribution
   CfDistributionDomainName:
     Description: 'Domain name attached to the CloudFront distribution'
     Value: !GetAtt CfDistribution.DomainName
