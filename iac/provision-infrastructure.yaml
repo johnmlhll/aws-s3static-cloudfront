@@ -8,7 +8,7 @@ Resources:
       Comment: 'Maolte Technical Solutions demo project to showcase a html/css static distribution to CloudFront'
     Properties:
       AccessControl: 'Private'
-      BucketName: !Sub 'static-cloudfront-distro-${AWS::StackName}-${AWS::AccountId}'
+      BucketName: !Sub 'static-cloudfront-demo-sandbox'
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault: 
