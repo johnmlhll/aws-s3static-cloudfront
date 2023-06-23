@@ -8,12 +8,12 @@ variables:
   - group: 'cloudfrontS3DemoGroupNormal'
 
 parameters:
-  - name: AWSAccessCreds
+  - name: RegionCode
     type: string 
-    default: '${{ variables.awsRegion }}'
+    default: '$(awsRegion)'
   - name: CFTStackName
     type: string
-    default: '${{ variables.cftStackName }}'
+    default: $(cftStackName)
 
 stages:
   - stage: ProvisionAWSInfrastructure
