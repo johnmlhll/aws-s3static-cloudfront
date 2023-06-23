@@ -12,7 +12,7 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault: 
-          SSEAlgorithm: 'AES256'
+            SSEAlgorithm: 'AES256'
       LifecycleConfiguration:
         Rules:
         - Id: GlacierMove

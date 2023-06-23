@@ -10,10 +10,10 @@ variables:
 parameters:
   - name: AWSAccessCreds
     type: string 
-    default: 'us-east-1'
+    default: ${{ variables.awsRegion }}
   - name: CFTStackName
     type: string
-    default: 'CloudFrontStaticDemoStack'
+    default: ${{ variables.cftStackName }}
 
 stages:
   - stage: ProvisionAWSInfrastructure
