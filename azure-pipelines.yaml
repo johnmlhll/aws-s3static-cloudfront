@@ -10,7 +10,7 @@ variables:
 parameters:
   - name: AWSAccessCreds
     type: string 
-    default: ${{ variables.awsRegion }}
+    default: '${{ variables.awsRegion }}'
   - name: CFTStackName
     type: string
     default: '${{ variables.cftStackName }}'
