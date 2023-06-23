@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'S3 & Cloudfront distribution provisioning deployment'
+Description: 'S3 & Cloudfront distribution provisioning deployment demo'
 
 Resources:
   S3Bucket:
@@ -28,7 +28,7 @@ Resources:
           ExpirationInDays: 2777
           Transitions:
           - TransitionInDays: 60
-            storageClass: DEEP_ARCHIVE
+            StorageClass: DEEP_ARCHIVE
     Type: 'AWS::S3::Bucket'
 
   S3BucketPolicy:
