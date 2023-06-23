@@ -28,6 +28,7 @@ Resources:
           ExpirationInDays: 2777
           Transitions:
           - TransitionInDays: 60
+            storageClass: DEEP_ARCHIVE
     Type: 'AWS::S3::Bucket'
 
   S3BucketPolicy:
