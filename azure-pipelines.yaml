@@ -11,6 +11,10 @@ parameters:
   - name: AWSAccessCreds
     type: string 
     default: 'us-east-1'
+  - name: CFTStackName
+    type: string
+    default: 'CloudFrontStaticDemoStack'
+
 stages:
   - stage: ProvisionAWSInfrastructure
     displayName: "Deploy CFT Stack for S3/CloudFront to Maolte Sandbox"
@@ -21,7 +25,7 @@ stages:
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
           regionName: 'eu-west-1'
-          stackName: $[variables.awsAccessKey]
+          stackName: ${{ parameters.CFTStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
           captureStackOutputs: asVariables
 
@@ -35,7 +39,7 @@ stages:
         displayName: "Upload static site files to newly created S3"
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
-          regionName: ${{ parameters.AWSAccessCreds }}
+          regionName: 'eu-west-1'
           bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
