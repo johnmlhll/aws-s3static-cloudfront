@@ -17,14 +17,14 @@ Resources:
         Rules:
         - Id: GlacierRule
           Prefix: glacier
-          Status: enabled
+          Status: Enabled
           ExpirationInDays: 365
           Transitions:
           - TransitionInDays: 10
             StorageClass: GLACIER
         - Id: DeepGlacierRule
           Prefix: deepglacier
-          Status: enabled
+          Status: Enabled
           ExpirationInDays: 2777
           Transitions:
           - TransitionInDays: 60
