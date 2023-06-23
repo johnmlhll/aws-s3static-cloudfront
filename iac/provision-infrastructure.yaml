@@ -1,4 +1,4 @@
-AWSTemplateFormation: '2010-09-09'
+AWSTemplateFormationVersion: '2010-09-09'
 Description: 'S3 & Cloudfront distribution provisioning deployment'
 
 Resources:
