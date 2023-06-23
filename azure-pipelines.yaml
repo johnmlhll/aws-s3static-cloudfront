@@ -6,11 +6,6 @@ pool:
 variables:
 - group: 'cloudfrontS3DemoGroupSecure'
 - group: 'cloudfrontS3DemoGroupNormal'
-- name: 'AWS_REGION'
-  value: $(awsRegion)
-- name: 'AWS_CFT'
-  value: $(cftStackName)
-
 
 stages:
   - stage: ProvisionAWSInfrastructure
@@ -20,13 +15,12 @@ stages:
       steps:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
-          awsCredentials: $env:AWS_ACCCESS_CREDS
-          regionName: $env:AWS_REGION
+          awsCredentials: 'cloudfrontDemoSandbox'
+          regionName: 'eu-west-1'
           stackName: $env:AWS_CFT
           templateFile: 'iac/provision-infrastructure.yaml'
           captureStackOutputs: asVariables
-        env:
-          AWS_ACCCESS_CREDS: $(awsAccessKey)
+
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
     displayName: "Deploy Static (S3) Site"
@@ -36,14 +30,12 @@ stages:
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
-          awsCredentials: $env:AWS_ACCCESS_CREDS
-          regionName: $env:AWS_REGION
+          awsCredentials: 'cloudfrontDemoSandbox'
+          regionName: 'eu-west-1'
           bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
-        env:
-          AWS_ACCCESS_CREDS: $(awsAccessKey)   
         
 
 
