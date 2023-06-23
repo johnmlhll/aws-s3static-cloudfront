@@ -4,8 +4,12 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- group: cloudfrontS3DemoGroupSecure
-- group: cloudfrontS3DemoGroupNormal
+- group: 'cloudfrontS3DemoGroupSecure'
+- group: 'cloudfrontS3DemoGroupNormal'
+- name: 'AWS_REGION'
+  value: $(awsRegion)
+- name: 'AWS_CFT'
+  value: $(cftStackName)
 
 
 stages:
@@ -17,12 +21,12 @@ stages:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
           awsCredentials: $env:AWS_ACCCESS_CREDS
-          regionName: $env:awsRegion
-          stackName: $env:cftStackName
+          regionName: $env:AWS_REGION
+          stackName: $env:AWS_CFT
           templateFile: 'iac/provision-infrastructure.yaml'
           captureStackOutputs: asVariables
         env:
-          AWS_ACCCESS_CREDS: $(awsAccessKey)    
+          AWS_ACCCESS_CREDS: $(awsAccessKey)
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
     displayName: "Deploy Static (S3) Site"
@@ -33,7 +37,7 @@ stages:
         displayName: "Upload static site files to newly created S3"
         inputs:
           awsCredentials: $env:AWS_ACCCESS_CREDS
-          regionName: $env:awsRegion
+          regionName: $env:AWS_REGION
           bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
