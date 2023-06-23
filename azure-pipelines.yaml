@@ -4,9 +4,13 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-- group: 'cloudfrontS3DemoGroupSecure'
-- group: 'cloudfrontS3DemoGroupNormal'
+  - group: 'cloudfrontS3DemoGroupSecure'
+  - group: 'cloudfrontS3DemoGroupNormal'
 
+parameters:
+  - name: AWSAccessCreds
+    type: string 
+    default: 'us-east-1'
 stages:
   - stage: ProvisionAWSInfrastructure
     displayName: "Deploy CFT Stack for S3/CloudFront to Maolte Sandbox"
@@ -17,7 +21,7 @@ stages:
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
           regionName: 'eu-west-1'
-          stackName: $env:AWS_CFT
+          stackName: $[variables.awsAccessKey]
           templateFile: 'iac/provision-infrastructure.yaml'
           captureStackOutputs: asVariables
 
@@ -31,7 +35,7 @@ stages:
         displayName: "Upload static site files to newly created S3"
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
-          regionName: 'eu-west-1'
+          regionName: ${{ parameters.AWSAccessCreds }}
           bucketName: $(S3BucketName)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
