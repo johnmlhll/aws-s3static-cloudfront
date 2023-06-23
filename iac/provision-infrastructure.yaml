@@ -101,7 +101,7 @@ Outputs:
     value: !Ref CfDistribution
   CfDistributionDomainName:
     Description: 'Domain name attached to the CloudFront distribution'
-    Value: !GetAtt CfDistribution.Domainname
+    Value: !GetAtt CfDistribution.DomainName
       
           
 
