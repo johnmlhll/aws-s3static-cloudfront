@@ -3,10 +3,6 @@ trigger: none
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  - group: 'cloudfrontS3DemoGroupSecure'
-  - group: 'cloudfrontS3DemoGroupNormal'
-
 parameters:
   - name: RegionCode
     type: string 
