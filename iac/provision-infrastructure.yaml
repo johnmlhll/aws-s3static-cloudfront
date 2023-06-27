@@ -6,14 +6,13 @@ Parameters:
     Type: String
     Description: 'Name of the S3 bucket hosting the S3 bucket hosting the static site.'
   TransitionGlacier:
-    Type: 'Number'
+    Type: Number
     Description: 'Days before files transition to glacier carrying a different cost profile'
   TransitionDeepGlacier:
-    Type: 'Number'
+    Type: Number
     Description: 'Days before files transition from glacier to deep glacier carrying a different cost profile'
   TagProject:
-    Type: 'String'
-    Default: 'maolte-default'
+    Type: String
     Description: 'Resource tag tying the resource deployed back to the deploying project.'
   TagBilling:
     Type: String
@@ -23,13 +22,12 @@ Parameters:
     Description: 'Aggregate resource type for the resource for abstracted analytics'
   TagCostcode:
     Type: String
-    Default: 'devops'
     Description: 'Resource codecode for allocation purposes'
   CfTTLDefault:
     Type: Number
     Description: 'Default TTL for the CloudFront distro.'
   CfTTLMin:
-    Type: 'Number'
+    Type: Number
     Description: 'Minimum TTL for the CloudFront distro.'
   CfTTLMax:
     Type: Number
