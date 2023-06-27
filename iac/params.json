@@ -26,7 +26,7 @@
     {
         "ParameterKey": "TagClassification",
         "ParameterValue": "training-and-promotional" 
-    }
+    },
     {
         "ParameterKey": "CfTTLDefault",
         "ParameterValue": "86400" 
