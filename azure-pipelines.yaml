@@ -37,7 +37,7 @@ stages:
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
           regionName: ${{ parameters.RegionCode }}
-          bucketName: $(S3BucketName)
+          bucketName: '$(S3BucketName)'
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
