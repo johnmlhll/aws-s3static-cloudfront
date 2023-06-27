@@ -77,10 +77,7 @@ Resources:
         - key: classification
           value: !Ref TagClassification
         - key: resource
-          value: !Join 
-            - '-', 
-            - !Sub '${AWS::StackName}'
-            - !Ref 'AWS::Region'
+          value: !Sub 's3-component-${AWS::StackName}'
     Type: 'AWS::S3::Bucket'
 
   S3BucketPolicy:
@@ -146,10 +143,7 @@ Resources:
           - key: classification
             value: !Ref TagClassification
           - key: resource
-            value:  !Join
-              - '-', 
-              - !Sub '${AWS::StackName}'
-              - !Ref 'AWS::Region'
+            value:  !Sub 'cloudfront-component-${AWS::StackName}'
     Type: 'AWS::CloudFront::Distribution'
 
   CFOriginAccessIdentity:
