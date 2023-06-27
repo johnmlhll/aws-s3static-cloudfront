@@ -98,8 +98,7 @@ Resources:
 
   CfDistribution:
     Metadata:
-      Comment: 'Basic CloudFront distribution from an S3 file origin'    
-    DependsOn: S3Bucket  
+      Comment: 'Basic CloudFront distribution from an S3 file origin'
     Properties:
       DistributionConfig:
         Comment: 'CloudFront distribution for sample html/css website by Maolte Technical Solutions Limited'
