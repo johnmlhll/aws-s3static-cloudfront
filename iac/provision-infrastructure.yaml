@@ -4,41 +4,40 @@ Description: 'S3 & Cloudfront distribution provisioning deployment demo'
 Parameters:
   S3BucketTitle:
     Type: String
-    Description: 'Name of the S3 bucket hosting the S3 bucket hosting the static site.'
+    Description: Name of the S3 bucket hosting the S3 bucket hosting the static site.
   TransitionGlacier:
     Type: Number
-    Description: 'Days before files transition to glacier carrying a different cost profile'
+    Description: Days before files transition to glacier carrying a different cost profile
   TransitionDeepGlacier:
     Type: Number
-    Description: 'Days before files transition from glacier to deep glacier carrying a different cost profile'
+    Description: Days before files transition from glacier to deep glacier carrying a different cost profile
   TagProject:
     Type: String
-    Description: 'Resource tag tying the resource deployed back to the deploying project.'
+    Description: Resource tag tying the resource deployed back to the deploying project
   TagBilling:
     Type: String
-    Description: 'Resource tag for the billing type of the resource.'
+    Description: Resource tag for the billing type of the resource
   TagClassification:
     Type: String
-    Description: 'Aggregate resource type for the resource for abstracted analytics'
+    Description: Aggregate resource type for the resource for abstracted analytics
   TagCostcode:
     Type: String
-    Description: 'Resource codecode for allocation purposes'
+    Description: Resource codecode for allocation purposes
   CfTTLDefault:
     Type: Number
-    Description: 'Default TTL for the CloudFront distro.'
+    Description: Default TTL for the CloudFront distro.
   CfTTLMin:
     Type: Number
-    Description: 'Minimum TTL for the CloudFront distro.'
+    Description: Minimum TTL for the CloudFront distro.
   CfTTLMax:
     Type: Number
-    Description: 'Maximum TTL for the CloudFront distro.'
+    Description: Maximum TTL for the CloudFront distro.
   CfHttpVersion:
     Type: String
-    Description: 'Http version for the CloudFront distro to communicate over' 
+    Description: Http version for the CloudFront distro to communicate over
   CfRootFile:
     Type: String
-    Description: 'Name of HTML root file that the static site will be based upon.'
-    Default: 'index.html' 
+    Description: Name of HTML root file that the static site will be based upon.
 
 Resources:
   S3Bucket:
