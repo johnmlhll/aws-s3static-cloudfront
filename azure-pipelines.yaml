@@ -6,7 +6,7 @@ pool:
 parameters:
   - name: RegionCode
     type: string 
-    default: 'us-east-1'
+    default: 'eu-west-1'
   - name: CFTStackName
     type: string
     default: 'CloudFrontS3DemoStack'
@@ -23,6 +23,7 @@ stages:
           regionName: ${{ parameters.RegionCode }}
           stackName: ${{ parameters.CFTStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
+          templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
 
   - stage: UploadFilesToS3

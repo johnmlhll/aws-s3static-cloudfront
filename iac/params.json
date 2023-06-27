@@ -1,0 +1,50 @@
+[
+    {
+        "ParameterKey": "S3BucketTitle",
+        "ParameterValue": "static-cloudfront-demo-sandbox" 
+    },
+    {
+        "ParameterKey": "TransitionGlacier",
+        "ParameterValue": "10" 
+    },
+    {
+        "ParameterKey": "TransitionDeepGlacier",
+        "ParameterValue": "60" 
+    },
+    {
+        "ParameterKey": "TagProject",
+        "ParameterValue": "cloudfront-s3-demo" 
+    },
+    {
+        "ParameterKey": "TagBilling",
+        "ParameterValue": "internal" 
+    },
+    {
+        "ParameterKey": "TagCostcode",
+        "ParameterValue": "devops" 
+    },
+    {
+        "ParameterKey": "TagClassification",
+        "ParameterValue": "training-and-promotional" 
+    }
+    {
+        "ParameterKey": "CfTTLDefault",
+        "ParameterValue": "86400" 
+    },
+    {
+        "ParameterKey": "CfTTLMin",
+        "ParameterValue": "84600" 
+    },
+    {
+        "ParameterKey": "CfTTLMax",
+        "ParameterValue": "31536000" 
+    },
+    {
+        "ParameterKey": "CfHttpVersion",
+        "ParameterValue": "http1.1" 
+    },
+    {
+        "ParameterKey": "CfRootFile",
+        "ParameterValue": "index.html" 
+    }
+]

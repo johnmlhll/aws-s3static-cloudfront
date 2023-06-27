@@ -1,6 +1,47 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'S3 & Cloudfront distribution provisioning deployment demo'
 
+Parameters:
+  S3BucketTitle:
+    Type: String
+    Description: "Name of the S3 bucket hosting the S3 bucket hosting the static site."
+  TransitionGlacier:
+    Type: 'Number'
+    Description: "Days before files transition to glacier carrying a different cost profile"
+  TransitionDeepGlacier:
+    Type: 'Number'
+    Description: "Days before files transition from glacier to deep glacier carrying a different cost profile"
+  TagProject:
+    Type: 'String'
+    Default: "maolte-default"
+    Description: "Resource tag tying the resource deployed back to the deploying project."
+  TagBilling:
+    Type: String
+    Description: "Resource tag for the billing type of the resource."
+  TagClassification:
+    Type: String
+    Description: "Aggregate resource type for the resource for abstracted analytics"
+  TagCostcode:
+    Type: String
+    Default: "devops"
+    Description: "Resource codecode for allocation purposes"
+  CfTTLDefault:
+    Type: Number
+    Description: "Default TTL for the CloudFront distro."
+  CfTTLMin:
+    Type: 'Number'
+    Description: "Minimum TTL for the CloudFront distro."
+  CfTTLMax:
+    Type: Number
+    Description: "Maximum TTL for the CloudFront distro."
+  CfHttpVersion:
+    Type: String
+    Description: "Http version for the CloudFront distro to communicate over" 
+  CfRootFile:
+    Type: String
+    Description: "Name of HTML root file that the static site will be based upon."
+    Default: "index.html" 
+
 Resources:
   S3Bucket:
     DeletionPolicy: 'Delete'
@@ -8,7 +49,7 @@ Resources:
       Comment: 'Maolte Technical Solutions demo project to showcase a html/css static distribution to CloudFront'
     Properties:
       AccessControl: 'Private'
-      BucketName: !Sub 'static-cloudfront-demo-sandbox'
+      BucketName: !Ref S3BucketTitle
       BucketEncryption:
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault: 
@@ -20,15 +61,26 @@ Resources:
           Status: Enabled
           ExpirationInDays: 365
           Transitions:
-          - TransitionInDays: 10
+          - TransitionInDays: !Ref TransitionGlacier
             StorageClass: GLACIER
         - Id: DeepGlacierRule
           Prefix: deepglacier
           Status: Enabled
           ExpirationInDays: 2777
           Transitions:
-          - TransitionInDays: 60
+          - TransitionInDays: !Ref TransitionDeepGlacier
             StorageClass: DEEP_ARCHIVE
+      Tags:
+      - key: project
+        value: !Ref TagProject
+      - key: billing
+        value: !Ref TagBilling
+      - key: costcode
+        value: !Ref TagCostcode 
+      - key: classification
+        value: !Ref TagClassification
+      - key: resource
+        value: !Join ['-',[!Sub '${AWS::StackName}', !Ref 'AWS::Region']]
     Type: 'AWS::S3::Bucket'
 
   S3BucketPolicy:
@@ -62,20 +114,20 @@ Resources:
               - 'HEAD'
               - 'GET'
           Compress: false
-          DefaultTTL: 86400
+          DefaultTTL: !Ref CfTTLDefault
           ForwardedValues:
             Cookies:
               Forward: 'none'
             Headers:
               - 'Origin'
             QueryString: false 
-          MaxTTL: 31536000
-          MinTTL: 84600
+          MaxTTL: !Ref CfTTLMax
+          MinTTL: !Ref CfTTLMin
           TargetOriginId: !Sub 's3-origin-${S3Bucket}'
           ViewerProtocolPolicy: 'redirect-to-https'
-        DefaultRootObject: 'index.html'
+        DefaultRootObject: !Ref CfRootFile
         Enabled: true
-        HttpVersion: 'http1.1'
+        HttpVersion: !Ref CfHttpVersion
         IPV6Enabled: false 
         Origins:
           - DomainName: !GetAtt S3Bucket.DomainName
@@ -84,6 +136,17 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOriginAccessIdentity}'
         PriceClass: 'PriceClass_All'
+        Tags:
+        - key: project
+          value: !Ref TagProject
+        - key: billing
+          value: !Ref TagBilling
+        - key: costcode
+          value: !Ref TagCostcode 
+        - key: classification
+          value: !Ref TagClassification
+        - key: resource
+          value: !Join ['-',[!Sub '${AWS::StackName}', !Ref 'AWS::Region']]
     Type: 'AWS::CloudFront::Distribution'
 
   CFOriginAccessIdentity:
@@ -104,7 +167,3 @@ Outputs:
   CfDistributionDomainName:
     Description: 'Domain name attached to the CloudFront distribution'
     Value: !GetAtt CfDistribution.DomainName
-      
-          
-
-
