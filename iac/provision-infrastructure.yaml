@@ -68,16 +68,16 @@ Resources:
           - TransitionInDays: !Ref TransitionDeepGlacier
             StorageClass: DEEP_ARCHIVE
       Tags:
-        - key: project
+        - key: 'project'
           value: !Ref TagProject
-        - key: billing
+        - key: 'billing'
           value: !Ref TagBilling
-        - key: costcode
+        - key: 'costcode'
           value: !Ref TagCostcode 
-        - key: classification
+        - key: 'classification'
           value: !Ref TagClassification
-        - key: resource
-          value: !Sub 's3-component-${AWS::StackName}'
+        - key: 'resource'
+          value: !Join ['-', [!Sub 's3-component-${AWS::StackName}', !Ref 'AWS::Region']]
     Type: 'AWS::S3::Bucket'
 
   S3BucketPolicy:
@@ -134,16 +134,16 @@ Resources:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOriginAccessIdentity}'
         PriceClass: 'PriceClass_All'
         Tags:
-          - key: project
+          - key: 'project'
             value: !Ref TagProject
-          - key: billing
+          - key: 'billing'
             value: !Ref TagBilling
-          - key: costcode
+          - key: 'costcode'
             value: !Ref TagCostcode 
-          - key: classification
+          - key: 'classification'
             value: !Ref TagClassification
-          - key: resource
-            value:  !Sub 'cloudfront-component-${AWS::StackName}'
+          - key: 'resource'
+            value:  !Join ['-', [!Sub 'cloudfront-component-${AWS::StackName}', !Ref 'AWS::Region']]
     Type: 'AWS::CloudFront::Distribution'
 
   CFOriginAccessIdentity:
