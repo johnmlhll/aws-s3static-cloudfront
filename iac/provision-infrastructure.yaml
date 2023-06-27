@@ -99,6 +99,7 @@ Resources:
   CfDistribution:
     Metadata:
       Comment: 'Basic CloudFront distribution from an S3 file origin'
+    DependsOn: S3Bucket
     Properties:
       DistributionConfig:
         Comment: 'CloudFront distribution for sample html/css website by Maolte Technical Solutions Limited'
@@ -132,17 +133,17 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOriginAccessIdentity}'
         PriceClass: 'PriceClass_All'
-        Tags:
-          - Key: 'project'
-            Value: !Ref TagProject
-          - Key: 'billing'
-            Value: !Ref TagBilling
-          - Key: 'costcode'
-            Value: !Ref TagCostcode 
-          - Key: 'classification'
-            Value: !Ref TagClassification
-          - Key: 'resource'
-            Value:  !Join ['-', [!Sub 'cloudfront-component-${AWS::StackName}', !Ref 'AWS::Region']]
+      Tags:
+        - Key: 'project'
+          Value: !Ref TagProject
+        - Key: 'billing'
+          Value: !Ref TagBilling
+        - Key: 'costcode'
+          Value: !Ref TagCostcode 
+        - Key: 'classification'
+          Value: !Ref TagClassification
+        - Key: 'resource'
+          Value:  !Join ['-', [!Sub 'cloudfront-component-${AWS::StackName}', !Ref 'AWS::Region']]
     Type: 'AWS::CloudFront::Distribution'
 
   CFOriginAccessIdentity:
