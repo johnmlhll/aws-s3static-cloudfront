@@ -129,7 +129,7 @@ Resources:
         Origins:
           - DomainName: !GetAtt S3Bucket.DomainName
             Id: !Sub 's3-origin-${S3Bucket}'
-            OriginPath: 'code/'
+            OriginPath: ''
             S3OriginConfig:
               OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CFOriginAccessIdentity}'
         PriceClass: 'PriceClass_All'
