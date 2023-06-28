@@ -37,11 +37,15 @@ stages:
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
     variables:
-      S3BucketNameVar: $[ dependences.ProvisionAWSInfrastructure.outputs['ProvisionAWSInfrastructure.declareCFTOutputs.cftS3BucketOutput'] ]
+      S3BucketNameCFT: $[ dependences.ProvisionAWSInfrastructure.outputs['ProvisionAWSInfrastructure.declareCFTOutputs.cftS3BucketOutput'] ]
     displayName: "Deploy Static (S3) Site"
     jobs:
     - job:
       steps:
+      - bash: |
+          echo "S3 Local Variables: "
+          echo $(S3BucketNameCFT)
+        name: S3StageVariableChecks
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
