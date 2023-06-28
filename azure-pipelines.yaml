@@ -35,8 +35,7 @@ stages:
         displayName: "CFT Stack Var Been Declared for next Stage for S3 Bucket"
       - script:
           echo "Found the following:"
-          echo $(setS3BucketName.S3BucketNameVar)
-          echo $env:S3BucketName
+          echo "$env:S3BucketName"
         name: PrintS3OutputsFromCFT
 
 
