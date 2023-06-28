@@ -11,6 +11,10 @@ parameters:
     type: string
     default: 'CloudFrontS3DemoStack'
 
+variables:
+  - name: S3BucketNameVar
+    value: 'var-initialised'
+
 stages:
   - stage: ProvisionAWSInfrastructure
     displayName: "Deploy CFT Stack for S3/CloudFront to Maolte Sandbox"
