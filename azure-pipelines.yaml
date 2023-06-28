@@ -29,7 +29,7 @@ stages:
           echo "Declaring the captured S3 bucket values from output CFT outputs:"
           echo "##vso[task.setvariable variable=S3BucketNameVar;isOutput=true] $S3BucketName"
         name: DeclareS3BucketVar    
-      - bash:
+      - script:
           echo "Found the following:"
           echo "$(S3BucketNameVar)"
         name: PrintS3OutputsFromCFT  
