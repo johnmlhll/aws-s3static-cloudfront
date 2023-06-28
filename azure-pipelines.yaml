@@ -34,8 +34,8 @@ stages:
         name: setS3BucketName 
       - script:
           echo  "Found the following:" 
-          echo $(S3BucketName.S3Bucket) 
-          echo $(S3BucketNameVar)
+          echo ${S3BucketName.S3Bucket} 
+          echo '$(S3BucketNameVar)'
           echo $(setS3BucketName.S3BucketNameVar)
           
         name: PrintS3OutputsFromCFT
