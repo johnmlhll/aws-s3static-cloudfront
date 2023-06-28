@@ -30,12 +30,14 @@ stages:
           templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
       - script: |
-          echo "##vso[task.setvariable variable=S3BucketNameVar;isOutput=true] $S3BucketName" 
+          echo "##vso[task.setvariable variable=S3BucketNameVar;isOutput=true] $(S3BucketName.S3Bucket)" 
         name: setS3BucketName 
-        displayName: "CFT Stack Var Been Declared for next Stage for S3 Bucket"
       - script:
-          echo "Found the following:"
-          echo "$env:S3BucketName"
+          echo  "Found the following:" 
+          echo $(S3BucketName.S3Bucket) 
+          echo $(S3BucketNameVar)
+          echo $(setS3BucketName.S3BucketNameVar)
+          
         name: PrintS3OutputsFromCFT
 
 
