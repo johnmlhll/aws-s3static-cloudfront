@@ -25,14 +25,12 @@ stages:
           templateFile: 'iac/provision-infrastructure.yaml'
           templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
-      - checkout: none
-      - script: |
+      - bash: |
           echo "Declaring the captured S3 bucket values from output CFT outputs:"
-          echo "##vso[task.setvariable variable=S3BucketName;isOutput=true;]$S3BucketName"
-        name: CloudFormationOutputs
+          echo "##vso[task.setvariable variable=S3BucketNameVar;isOutput=true;]$S3BucketName"
       - script: |
           echo "Found the following:"
-          echo $(CloudFormationOutputs.S3BucketName)
+          echo $(S3BucketNameVar)
         name: PrintS3OutputsFromCFT  
 
 
@@ -47,7 +45,7 @@ stages:
         inputs:
           awsCredentials: 'cloudfrontDemoSandbox'
           regionName: ${{ parameters.RegionCode }}
-          bucketName: dependencies.ProvisionAWSInfrastructure.outputs['CloudFormationOutputs.S3BucketName]
+          bucketName: $(S3BucketNameVar)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
