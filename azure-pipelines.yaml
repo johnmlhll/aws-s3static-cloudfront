@@ -35,6 +35,7 @@ stages:
       - script:
           echo "Found the following:"
           echo $(S3BucketNameVar)
+          echo "$(env.S3BucketName)"
         name: PrintS3OutputsFromCFT  
 
 
