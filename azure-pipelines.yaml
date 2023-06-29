@@ -19,7 +19,7 @@ stages:
       steps:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
-          awsCredentials: $(AWS_CREDS)
+          awsCredentials: '$(AWS_CREDS)'
           regionName: ${{ parameters.RegionCode }}
           stackName: ${{ parameters.CFTStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
@@ -53,7 +53,7 @@ stages:
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
-          awsCredentials: $(AWS_CREDS)
+          awsCredentials: '$(AWS_CREDS)'
           regionName: ${{ parameters.RegionCode }}
           bucketName: $(s3BucketLocalVar)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
