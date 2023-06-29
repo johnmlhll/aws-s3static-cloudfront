@@ -31,7 +31,7 @@ stages:
       - bash: |
           echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true]$S3BUCKET_NAME"
           echo "##vso[task.setvariable variable=cftCfDistributionIdOutput;isOutput=true]$CF_DISTRO_ID"
-          echo "##vso[task.setvariable variable-cftCfDomainNameOutput;isOutput=true]$CF_DOMAINNAME"
+          echo "##vso[task.setvariable variable=cftCfDomainNameOutput;isOutput=true]$CF_DOMAINNAME"
           echo "CloudFormation Stack Outputs captured as variable dependencies for the next stage..."
         env:
           S3BUCKET_NAME: $(S3BucketName)
