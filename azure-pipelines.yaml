@@ -11,47 +11,48 @@ parameters:
     type: string
     default: 'CloudFrontS3DemoStack'
 
-variables:
-  - name: S3BucketNameVar
-    value: 'var-initialised'
-
 stages:
   - stage: ProvisionAWSInfrastructure
     displayName: "Deploy CFT Stack for S3/CloudFront to Maolte Sandbox"
     jobs:
-    - job:
+    - job: ExecuteInfraTemplate
       steps:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
-          awsCredentials: 'cloudfrontDemoSandbox'
+          awsCredentials: $(AWS_SERVICE_CONN)
           regionName: ${{ parameters.RegionCode }}
           stackName: ${{ parameters.CFTStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
           templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
-      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true]$S3BucketName"
+      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true] $S3BucketName"
         name: declareCFTOutputs
-      - bash: |
-          echo $(declareCFTOutputs.cftS3BucketOutput)
-          echo $(cftS3BucketOutput)
+      - script: |
+          echo '$(declareCFTOutputs.cftS3BucketOutput)'
+          echo '$(cftS3BucketOutput)'
+          echo '$(CfDistributionDomainName)'
+          echo 'Write-Host "Captured S3 Bucket var: $(cftS3BucketOutput)"'
         name: echoCFTOutputs
+    
 
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
     displayName: "Deploy Static (S3) Site"
     jobs:
-    - job:
+    - job: UploadStaticSiteFiles
+      variables:
+        s3BucketLocalVar: $[stageDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.outputs['declareCFTOutputs.cftS3BucketOutput']]
       steps:
       - bash: |
           echo "S3 Local Variables: "
-          echo $(cftS3BucketOutput)
+          echo $(s3BucketLocalVar)
         name: S3StageVariableChecks
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
-          awsCredentials: 'cloudfrontDemoSandbox'
+          awsCredentials: $(AWS_SERVICE_CONN)
           regionName: ${{ parameters.RegionCode }}
-          bucketName: '$(cftS3BucketOutput)'
+          bucketName: $(s3BucketLocalVar)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
