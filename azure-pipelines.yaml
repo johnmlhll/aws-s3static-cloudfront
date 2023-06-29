@@ -25,15 +25,17 @@ stages:
           templateFile: 'iac/provision-infrastructure.yaml'
           templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
-      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true] test-var-map"
+        env:
+          S3BUCKET_NAME: $(S3BucketName)
+      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true] $S3BUCKET_NAME"
         name: declareCFTOutputs
       - bash: |
           echo '$(declareCFTOutputs.cftS3BucketOutput)'
           echo '$(S3BucketName)'
+          echo '$S3BUCKET_NAME'
           echo '$(CfDistributionDomainName)'
           echo 'Write-Host "Captured S3 Bucket var: $(cftS3BucketOutput)"'
         name: echoCFTOutputs
-    
 
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
