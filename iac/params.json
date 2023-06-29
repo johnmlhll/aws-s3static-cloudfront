@@ -1,15 +1,15 @@
 [
     {
         "ParameterKey": "S3BucketTitle",
-        "ParameterValue": "static-cloudfront-demo-sandbox" 
+        "ParameterValue": "static-cloudfront-demo-staging" 
     },
     {
         "ParameterKey": "TransitionGlacier",
-        "ParameterValue": "10" 
+        "ParameterValue": "30" 
     },
     {
         "ParameterKey": "TransitionDeepGlacier",
-        "ParameterValue": "60" 
+        "ParameterValue": "90" 
     },
     {
         "ParameterKey": "TagProject",

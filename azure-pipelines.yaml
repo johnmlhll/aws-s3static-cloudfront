@@ -9,7 +9,7 @@ parameters:
     default: 'eu-west-1'
   - name: CFTStackName
     type: string
-    default: 'CloudFrontS3DemoStack'
+    default: 'CloudFrontS3StagingStack'
   - name: AWSServiceConn
     type: string
     default: 'cloudfrontDemoSandbox'
