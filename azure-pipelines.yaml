@@ -28,17 +28,16 @@ stages:
           templateFile: 'iac/provision-infrastructure.yaml'
           templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
-      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true]$S3BUCKET_NAME"
+      - bash: |
+          echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true]$S3BUCKET_NAME"
+          echo "##vso[task.setvariable variable=cftCfDistributionIdOutput;isOutput=true]$CF_DISTRO_ID"
+          echo "##vso[task.setvariable variable-cftCfDomainNameOutput;isOutput=true]$CF_DOMAINNAME"
+          echo "CloudFormation Stack Outputs captured as variable dependencies for the next stage..."
         env:
           S3BUCKET_NAME: $(S3BucketName)
+          CF_DISTRO_ID: $(CfDistributionId)
+          CF_DOMAINNAME: $(CfDistributionDomainName)
         name: declareCFTOutputs
-      - bash: |
-          echo '$(declareCFTOutputs.cftS3BucketOutput)'
-          echo '$(S3BucketName)'
-          echo '$S3BUCKET_NAME'
-          echo '$(CfDistributionDomainName)'
-          echo 'Write-Host "Captured S3 Bucket var: $(cftS3BucketOutput)"'
-        name: echoCFTOutputs
 
   - stage: UploadFilesToS3
     dependsOn: ProvisionAWSInfrastructure
@@ -47,10 +46,14 @@ stages:
     - job: UploadStaticSiteFiles
       variables:
         s3BucketLocalVar: $[stageDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.outputs['declareCFTOutputs.cftS3BucketOutput']]
+        cfDistroIdLocalVar: $[staqeDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.outputs['declareCFTOutputs.cftCfDistributionIdOutput']]
+        cfDomainNameLocalVar: $[stageDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.ouputs['declareCFTOutputs.cftCfDomainNameOutput']]
       steps:
       - bash: |
-          echo "S3 Local Variables: "
+          echo "Local Variables for upload/update on the static site: "
           echo $(s3BucketLocalVar)
+          echo $(cfDistroIdLocalVar)
+          echo $(cfDomainNameLocalVar)
         name: S3StageVariableChecks
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
