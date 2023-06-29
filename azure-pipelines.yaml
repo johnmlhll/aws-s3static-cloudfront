@@ -28,7 +28,7 @@ stages:
           templateFile: 'iac/provision-infrastructure.yaml'
           templateParametersFile: 'iac/params.json'
           captureStackOutputs: asVariables
-      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true] $S3BUCKET_NAME"
+      - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true]$S3BUCKET_NAME"
         env:
           S3BUCKET_NAME: $(S3BucketName)
         name: declareCFTOutputs
