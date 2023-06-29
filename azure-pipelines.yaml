@@ -46,7 +46,7 @@ stages:
     - job: UploadStaticSiteFiles
       variables:
         s3BucketLocalVar: $[stageDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.outputs['declareCFTOutputs.cftS3BucketOutput']]
-        cfDistroIdLocalVar: $[staqeDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.outputs['declareCFTOutputs.cftCfDistributionIdOutput']]
+        cfDistroIdLocalVar: $[stageDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.outputs['declareCFTOutputs.cftCfDistributionIdOutput']]
         cfDomainNameLocalVar: $[stageDependencies.ProvisionAWSInfrastructure.ExecuteInfraTemplate.ouputs['declareCFTOutputs.cftCfDomainNameOutput']]
       steps:
       - bash: |
