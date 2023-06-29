@@ -19,7 +19,7 @@ stages:
       steps:
       - task: CloudFormationCreateOrUpdateStack@1
         inputs:
-          awsCredentials: $(AWS_SERVICE_CONN)
+          awsCredentials: $(AWS_CREDS)
           regionName: ${{ parameters.RegionCode }}
           stackName: ${{ parameters.CFTStackName }}
           templateFile: 'iac/provision-infrastructure.yaml'
@@ -27,6 +27,7 @@ stages:
           captureStackOutputs: asVariables
         env:
           S3BUCKET_NAME: $(S3BucketName)
+          AWS_CREDS: $(AWS_SERVICE_CONN)
       - bash: echo "##vso[task.setvariable variable=cftS3BucketOutput;isOutput=true] $S3BUCKET_NAME"
         name: declareCFTOutputs
       - bash: |
@@ -52,12 +53,14 @@ stages:
       - task: S3Upload@1
         displayName: "Upload static site files to newly created S3"
         inputs:
-          awsCredentials: $(AWS_SERVICE_CONN)
+          awsCredentials: $(AWS_CREDS)
           regionName: ${{ parameters.RegionCode }}
           bucketName: $(s3BucketLocalVar)
           sourceFolder: '$(System.DefaultWorkingDirectory)/code'
           globExpressions: '**'
           filesAcl: 'bucket-owner-full-control'
+        env:
+          AWS_CREDS: $(AWS_SERVICE_CONN)
         
 
 
